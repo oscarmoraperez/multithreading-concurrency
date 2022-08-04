@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class SingleProducerAndConsumer {
+public class DataItemQueue_IT {
     @SneakyThrows
     @Test
     public void shouldAcceptOneProducerAndConsumer() {

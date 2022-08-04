@@ -8,7 +8,7 @@ import java.util.Queue;
  */
 public class DataItemQueue {
     private final Queue<DataItem> commonStorage = new ArrayDeque<DataItem>();
-    private final static int MAX_SIZE = 5000;
+    private final static int MAX_SIZE = 500;
 
     private final Object FULL = new Object();
     private final Object EMPTY = new Object();
