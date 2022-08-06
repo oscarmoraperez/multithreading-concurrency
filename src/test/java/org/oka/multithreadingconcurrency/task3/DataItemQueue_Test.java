@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 import static java.util.Arrays.asList;
 
-public class DataItemQueue_IT {
+public class DataItemQueue_Test {
     @SneakyThrows
     @Test
     public void shouldAcceptOneProducerAndConsumer() {
