@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static java.util.Arrays.asList;
 
@@ -35,7 +37,7 @@ public class DataItemQueue_IT {
         // Given
         DataItemQueue queue = new DataItemQueue();
         List<Thread> producerList = asList(new Thread(new Producer(queue)), new Thread(new Producer(queue)), new Thread(new Producer(queue)));
-        List<Thread> consumerList = asList(new Thread(new Consumer(queue)), new Thread(new Consumer(queue)), new Thread(new Consumer(queue)));
+        List<Thread> consumerList = asList(new Thread(new Consumer(queue)), new Thread(new Producer(queue)), new Thread(new Producer(queue)));
 
         // When
         producerList.forEach(Thread::start);

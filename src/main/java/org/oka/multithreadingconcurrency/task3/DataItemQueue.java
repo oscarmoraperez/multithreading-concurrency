@@ -8,7 +8,7 @@ import java.util.Queue;
  */
 public class DataItemQueue {
     private final Queue<DataItem> commonStorage = new ArrayDeque<DataItem>();
-    private final static int MAX_SIZE = 500;
+    private final static int MAX_SIZE = 2;
 
     private final Object FULL = new Object();
     private final Object EMPTY = new Object();
@@ -20,7 +20,9 @@ public class DataItemQueue {
      * @return
      */
     public boolean isFull() {
-        return commonStorage.size() == MAX_SIZE;
+        synchronized (MONITOR) {
+            return commonStorage.size() == MAX_SIZE;
+        }
     }
 
     /**
@@ -29,7 +31,9 @@ public class DataItemQueue {
      * @return
      */
     public boolean isEmpty() {
-        return commonStorage.isEmpty();
+        synchronized (MONITOR) {
+            return commonStorage.isEmpty();
+        }
     }
 
     /**

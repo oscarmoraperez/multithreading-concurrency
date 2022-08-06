@@ -32,10 +32,10 @@ public class Consumer implements Runnable {
                 break;
             }
             // Consume an item
-            item = queue.removeItem();
+            queue.removeItem();
             // wake up producer threads if necessary
             queue.notifyAllForFull();
-            System.out.println("Consumed Item: " + item.toString());
+            //System.out.println("Consumed Item: " + item.toString());
         }
     }
 

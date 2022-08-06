@@ -1,7 +1,10 @@
 package org.oka.multithreadingconcurrency.task4;
 
+import lombok.Getter;
+
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Pool that block when it has not any items or it full
@@ -11,7 +14,13 @@ public class BlockingObjectPool {
 
     private final Object FULL = new Object();
     private final Object EMPTY = new Object();
+    private final Object MONITOR = new Object();
+    @Getter
     private int size = 0;
+    @Getter
+    private final AtomicInteger gets = new AtomicInteger();
+    @Getter
+    private final AtomicInteger takes = new AtomicInteger();
 
     /**
      * Creates filled pool of passed size
@@ -36,14 +45,24 @@ public class BlockingObjectPool {
      *
      * @return object from pool
      */
-    public synchronized Object get() throws InterruptedException {
-        if (commonStorage.isEmpty()) {
+    public Object get() {
+        if (empty()) {
             synchronized (EMPTY) {
-                EMPTY.wait();
+                try {
+                    EMPTY.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        Object object = commonStorage.poll();
-        FULL.notifyAll();
+        Object object;
+        synchronized (MONITOR) {
+            object = commonStorage.poll();
+        }
+        gets.getAndAdd(1);
+        synchronized (FULL) {
+            FULL.notifyAll();
+        }
         return object;
     }
 
@@ -52,13 +71,30 @@ public class BlockingObjectPool {
      *
      * @param object to be taken back to pool
      */
-    public synchronized void take(Object object) throws InterruptedException {
-        if (commonStorage.size() == size) {
-            FULL.wait();
+    public void take(Object object) {
+        if (full()) {
+            try {
+                synchronized (FULL) {
+                    FULL.wait();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-        commonStorage.add(object);
+        synchronized (MONITOR) {
+            commonStorage.add(object);
+        }
+        takes.getAndAdd(1);
         synchronized (EMPTY) {
             EMPTY.notifyAll();
         }
+    }
+
+    public synchronized boolean empty() {
+        return commonStorage.isEmpty();
+    }
+
+    public synchronized boolean full() {
+        return commonStorage.size() == this.size;
     }
 }
