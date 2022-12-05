@@ -1,7 +1,6 @@
-# Java Mentoring Program: multithreading and concurrency
+# Multithreading and concurrency
 
-This maven-based project contains the exercises defined in the 'multithreading and concurrency ' module of Java
-Mentoring program.
+This maven-based project contains  a set of exercises to train on concurrency and multithreading topics. 
 
 ### Task 1
 
